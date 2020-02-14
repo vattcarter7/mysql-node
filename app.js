@@ -15,10 +15,10 @@ app.use(express.static(__dirname + "/public"));
 
 
 const connection = mysql.createConnection({
-  host     : 'localhost' , 
-  user     : 'root', 
-  password : 'sopheak1234',
-  database : 'social_db' 
+  host     : 'us-cdbr-iron-east-04.cleardb.net' , 
+  user     : 'bb9270a0e6cea6', 
+  password : '93ad2153',
+  database : 'heroku_d3dd4f04481e2ae' 
 });
 
 const port = process.env.PORT || 8080;
