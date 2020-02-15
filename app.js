@@ -13,22 +13,22 @@ app.set("view engine", "ejs");
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static(__dirname + "/public"));
 
-
-const connection = mysql.createConnection({
-  host     : 'us-cdbr-iron-east-04.cleardb.net' , 
-  user     : 'bb9270a0e6cea6', 
-  password : '93ad2153',
-  database : 'heroku_d3dd4f04481e2ae' 
-});
+// // This is for localhost coniguration
+// const connection = mysql.createConnection({
+//   host     : 'us-cdbr-iron-east-04.cleardb.net' , 
+//   user     : 'bb9270a0e6cea6', 
+//   password : '93ad2153',
+//   database : 'heroku_d3dd4f04481e2ae' 
+// });
 
 const port = process.env.PORT || 8080;
 
-// const connection = mysql.createConnection({
-//     host     : process.env.HOST,
-//     user     : process.env.USER,
-//     password : process.env.DATABASE_PASSWORD,
-//     database : process.env.DATABASE_NAME
-//   });
+const connection = mysql.createConnection({
+    host     : process.env.HOST,
+    user     : process.env.USER,
+    password : process.env.DATABASE_PASSWORD,
+    database : process.env.DATABASE_NAME
+  });
 
 app.get("/", function(req, res){
     // Find count of users in DB
