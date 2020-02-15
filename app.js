@@ -8,6 +8,11 @@ const app = express();
 // Load env vars
 dotenv.config({ path: './config/config.env' });
 
+process.on('uncaughtException', err => {
+    console.log('UNHANDLED EXCEPTION! 👿  Shutting down...');
+    console.log(err.name, err.message);
+    process.exit(1);
+  });
 
 app.set("view engine", "ejs");
 app.use(bodyParser.urlencoded({extended: true}));
@@ -55,3 +60,13 @@ app.post("/register", function(req, res){
 app.listen(port, function(){
     console.log("Server running on port " + port);
 });
+
+process.on('unhandledRejection', err => {
+    console.log('UNHANDLED REJECTION! 👿  Shutting down...');
+    console.log(err.name, err.message);
+    server.close(() => {
+      process.exit(1);
+    });
+  });
+
+connection.end();
