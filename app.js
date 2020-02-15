@@ -30,6 +30,8 @@ const connection = mysql.createConnection({
     database : process.env.DATABASE_NAME
   });
 
+connection.connect();
+
 app.get("/", function(req, res){
     // Find count of users in DB
     const q = "SELECT COUNT(*) AS count FROM users_demo";
