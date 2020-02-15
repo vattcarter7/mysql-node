@@ -1,12 +1,12 @@
 const express = require("express");
 const dotenv = require("dotenv");
-
-const mysql = require("mysql");
 const bodyParser = require("body-parser");
 const app = express();
 
 // Load env vars
 dotenv.config({ path: "./config/config.env" });
+
+const connection = require('./config/db');
 
 app.set("view engine", "ejs");
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -20,27 +20,10 @@ app.use(express.static(__dirname + "/public"));
 //   database : 'social_db'
 // });
 
-const port = process.env.PORT || 8080;
-
-const db = mysql.createConnection({
-  host: process.env.HOST,
-  user: process.env.USER,
-  password: process.env.DATABASE_PASSWORD,
-  database: process.env.DATABASE_NAME
-});
-
-db.connect(err => {
-  if (err) {
-    console.error("error connecting: " + err.stack);
-    return;
-  }
-  console.log("connected as id " + db.threadId);
-});
-
 app.get("/", (req, res) => {
   // Find count of users in DB
   const q = "SELECT COUNT(*) AS count FROM users_demo";
-  db.query(q, (err, results) => {
+  connection.query(q, (err, results) => {
     if (err) throw err;
     const count = results[0].count;
     res.render("home", { count: count });
@@ -52,17 +35,16 @@ app.post("/register", (req, res) => {
     email: req.body.email
   };
 
-  db.query("INSERT INTO users_demo SET ?", person, (err, result) => {
+  connection.query("INSERT INTO users_demo SET ?", person, (err, result) => {
     if (err) throw err;
     res.redirect("/");
   });
 });
 
-app.listen(port, err => {
-  if (err) throw err;
-  console.log("Server running on port " + port);
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}.`);
 });
-
 // process.on("uncaughtException", err => {
 //   console.log("UNHANDLED EXCEPTION! 👿  Shutting down...");
 //   console.log(err.name, err.message);
