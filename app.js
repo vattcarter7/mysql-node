@@ -51,6 +51,7 @@ app.post("/register", function(req, res){
     const person = {
         email: req.body.email
     };
+
     connection.query('INSERT INTO users_demo SET ?', person, function(err, result) {
         if (err) throw err;
         res.redirect("/");
