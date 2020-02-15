@@ -36,7 +36,7 @@ app.post("/register", (req, res) => {
   };
 
   connection.query("INSERT INTO users_demo SET ?", person, (err, result) => {
-    if (err) throw err;
+    if (err) return res.send('Error with inserting data');
     res.redirect("/");
   });
 });
