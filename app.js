@@ -35,7 +35,13 @@ const connection = mysql.createConnection({
     database : process.env.DATABASE_NAME
   });
 
-connection.connect();
+connection.connect(function(err) {
+if (err) {
+    console.error('error connecting: ' + err.stack);
+    return;
+}
+    console.log('connected as id ' + connection.threadId);
+});
 
 app.get("/", function(req, res){
     // Find count of users in DB
@@ -68,5 +74,3 @@ process.on('unhandledRejection', err => {
       process.exit(1);
     });
   });
-
-connection.end();
