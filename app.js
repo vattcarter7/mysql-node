@@ -22,25 +22,25 @@ app.use(express.static(__dirname + "/public"));
 
 const port = process.env.PORT || 8080;
 
-const connection = mysql.createConnection({
+const db = mysql.createConnection({
   host: process.env.HOST,
   user: process.env.USER,
   password: process.env.DATABASE_PASSWORD,
   database: process.env.DATABASE_NAME
 });
 
-connection.connect(err => {
+db.connect(err => {
   if (err) {
     console.error("error connecting: " + err.stack);
     return;
   }
-  console.log("connected as id " + connection.threadId);
+  console.log("connected as id " + db.threadId);
 });
 
 app.get("/", (req, res) => {
   // Find count of users in DB
   const q = "SELECT COUNT(*) AS count FROM users_demo";
-  connection.query(q, function(err, results) {
+  db.query(q, (err, results) => {
     if (err) throw err;
     const count = results[0].count;
     res.render("home", { count: count });
@@ -52,29 +52,27 @@ app.post("/register", (req, res) => {
     email: req.body.email
   };
 
-  connection.query("INSERT INTO users_demo SET ?", person, function(
-    err,
-    result
-  ) {
+  db.query("INSERT INTO users_demo SET ?", person, (err, result) => {
     if (err) throw err;
     res.redirect("/");
   });
 });
 
 app.listen(port, err => {
+  if (err) throw err;
   console.log("Server running on port " + port);
 });
 
-process.on("uncaughtException", err => {
-  console.log("UNHANDLED EXCEPTION! 👿  Shutting down...");
-  console.log(err.name, err.message);
-  process.exit(1);
-});
+// process.on("uncaughtException", err => {
+//   console.log("UNHANDLED EXCEPTION! 👿  Shutting down...");
+//   console.log(err.name, err.message);
+//   process.exit(1);
+// });
 
-process.on("unhandledRejection", err => {
-  console.log("UNHANDLED REJECTION! 👿  Shutting down...");
-  console.log(err.name, err.message);
-  server.close(() => {
-    process.exit(1);
-  });
-});
+// process.on("unhandledRejection", err => {
+//   console.log("UNHANDLED REJECTION! 👿  Shutting down...");
+//   console.log(err.name, err.message);
+//   server.close(() => {
+//     process.exit(1);
+//   });
+// });
